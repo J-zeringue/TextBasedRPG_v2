@@ -1,5 +1,7 @@
 import os
 import random
+from character import*
+from world import*
 
 # booleans to control game play loop
 run = True
@@ -21,58 +23,6 @@ elixirs = 0
 gold = 0
 x = 0
 y = 0
-
-# creates map
-    # x     0        1          2         3        4        5          6         7      y
-map = [['mountain', 'plains', 'desert', 'plains','desert', 'plains', 'plains', 'plains'], # 0  
-       ['mountain', 'plains', 'plains', 'plains','plains', 'plains', 'plains', 'plains'], # 1
-       ['mountain', 'plains', 'plains', 'plains','plains', 'plains', 'plains', 'plains'], # 2
-       ['mountain', 'plains', 'plains', 'plains','plains', 'plains', 'plains', 'plains'], # 3
-       ['mountain', 'plains', 'plains', 'plains','plains', 'plains', 'plains', 'plains'], # 4
-       ['plains', 'plains', 'plains', 'plains','plains', 'plains', 'plains', 'plains'], # 5
-       ['plains', 'plains', 'plains', 'plains','plains', 'plains', 'plains', 'plains'], # 6
-       ['plains', 'plains', 'plains', 'plains','plains', 'plains', 'plains', 'plains'],]# 7
-
-x_len = len(map) - 1
-y_len = len(map[0]) - 1
-
-
-
-biom = {
-    'plains':{
-        'tile': 'PLAINS',
-        'e': True},
-    'forest':{
-        'tile': 'WOODS',
-        'e': True},
-    'fields':{
-        'tile': 'FIELDS',
-        'e': False},
-    'bridge':{
-        'tile': 'BRIDGE',
-        'e': True},
-    'town':{
-        'tile': 'TOWN HUB',
-        'e': False},
-    'shop':{
-        'tile': 'SHOP',
-        'e': False},
-    'desert':{
-        'tile': 'DESERT',
-        'e': True},
-    'cave':{
-        'tile': 'CAVE',
-        'e': True},
-    'crypt':{
-        'tile': 'crypt',
-        'e': True},
-    'mountain':{
-        'tile': 'MOUNTAINS',
-        'e': True},
-    'hill':{
-        'tile': 'HILL',
-        'e': True},
-}
 
 enemy_list = ['Goblin', 'Orc', 'Slime']
 
