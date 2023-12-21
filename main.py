@@ -69,10 +69,8 @@ def use_potion(amount):
 
 def battle(enemy):
     global potions, elixirs, boss, fight
-    print('found fight')
-    
+
     while fight:
-        clear()
         draw_line()
         print(f"Enemy {enemy.name} attacks!")
         draw_line()
@@ -86,8 +84,9 @@ def battle(enemy):
             print('2 - Use potion')
         if elixirs > 0:
             print('3 - Use elixir')
+        print('4 - Flee')
         draw_line()
-        choice = input(": ")
+        choice = input("> ")
 
         if choice == '1':
             enemy.hp -= player.atk
@@ -109,6 +108,13 @@ def battle(enemy):
                 use_potion(30)
                 player.hp -= enemy.atk
                 print(f'{enemy.name} attacks {player.name} for {enemy.atk} damage')
+
+        if choice == '4':
+            if random.randint(0, 100) >= 33:
+                print(f'{player.name} flees from {enemy.name}')
+                fight = False
+            else:
+                print('Your attempt to flee has failed!')
 
         # checks player health
         if player.hp <= 0:
@@ -221,7 +227,7 @@ while run:
         if choice == '1':
             clear()
             name = input('What is your name? ')
-            player = Character(name, 1, 10, 2, 0, 0 )
+            player = Character(name, 1, 100, 20, 0, 0 )
             draw_line()
             menu = False
             play = True
@@ -270,10 +276,10 @@ while run:
         # controls battle encounters
         if not standing:
             if biom[map[x][y]]['e'] == True:
-                if random.randint(0, 100) <= 40:
+                if random.randint(0, 100) <= 33:
                     fight = True
                     battle(Enemy.spawn_random_enemy())
-                    
+
         # shows current player location
         try:
             print(f"Current Location: {biom[map[x][y]]['tile']}")
@@ -281,13 +287,9 @@ while run:
             print("I have moved too far away, I should turn back")
         draw_line()
         print(player.name)
-        print(f"HP: {player.hp}/{player.hp_max}")
-        print(f"Attack: {player.atk}")
-        print(f"Potions: {potions}")
-        print(f"Elixirs: {elixirs}")
-        print(f"Gold: {player.gold}")
-        print(f"Coordinates: {x},{y}")
-        print(standing)
+        print(f"HP: {player.hp}/{player.hp_max} Attack: {player.atk}")
+        print(f"Potions: {potions} Elixirs: {elixirs}")
+        print(f"Gold: {player.gold} Level: {player.level} EXP: {player.xp}/{player.xp_to_lvl} Coordinates: {x},{y}")
         draw_line()
         # menu for player 
         print("0. Save and quit")
