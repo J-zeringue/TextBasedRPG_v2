@@ -24,8 +24,8 @@ map = [['mountain', 'desert', 'desert', 'plains','desert', 'plains', 'plains', '
        ['forest', 'cave', 'forest', 'hill','hill', 'hill', 'plains', 'plains', 'desert', 'hill','desert', 'plains', 'plains', 'plains'], # 18
        ['mountain', 'mountain', 'mountain', 'plains','plains', 'plains', 'plains', 'plains', 'desert', 'plains','desert', 'plains', 'plains', 'plains'],]# 19
 
-x_len = len(map) - 1
-y_len = len(map[0]) - 1
+y_len = len(map) - 1
+x_len = len(map[0]) - 1
        
        
 

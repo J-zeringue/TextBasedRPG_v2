@@ -15,32 +15,13 @@ buy = False
 speak = False
 boss = False
 
-h_p = 50
-hp_max = h_p
-attk = 3
 potions = 1
 elixirs = 0
 gold = 0
+# coords of player on map
 x = 0
 y = 0
 
-mobs = {
-    'Goblin':{
-        'hp': 15,
-        'atk': 3,
-        'gold': 5
-    },
-    'Orc':{
-        'hp': 35,
-        'atk': 5,
-        'gold': 10
-    },    
-    'Slime':{
-        'hp': 30,
-        'atk': 2,
-        'gold': 10
-    }
-}
 
 #current_tile = map[x][y]
 #print(current_tile)
@@ -57,6 +38,7 @@ def draw_line():
 def clear():
     os.system("clear")
 
+# saves player stats by writing to a text file
 def save():
     player_stats = [
         player.name,
@@ -79,25 +61,16 @@ def save():
     f.close()
 
 def use_potion(amount):
-    global h_p, hp_max
-    if h_p + amount <= hp_max:
-        h_p += amount
+    if player.hp + amount <= player.hp_max:
+        player.hp += amount
     else:
-        h_p = hp_max
-    print(f'{name} uses a potion and heals for {h_p + amount}')
+        player.hp = player.hp_max
+    print(f'{player.name} uses a potion and heals for {amount}')
 
-def battle():
-    global h_p, attk, hp_max, gold, potions, elixirs, boss
-
-    if not boss:
-        enemy = Enemy.spawn_random_enemy()
-    else:
-        enemy = 'Boss'
-    hp = mobs[enemy][hp]
-    hpmax = hp
-    atk = mobs[enemy][atk]
-    g = mobs[enemy][gold]
-
+def battle(enemy):
+    global potions, elixirs, boss, fight
+    print('found fight')
+    
     while fight:
         clear()
         draw_line()
@@ -185,16 +158,16 @@ def cave_boss_battle():
 
 
 def shop():
-    global buy, gold, potions, elixirs, attk
+    global buy, potions, elixirs
     while buy:
         clear()
         draw_line()
         print("Welcome to Krupp's mysterous mysterions!")
         draw_line()
-        print(f'Gold: {gold}')
+        print(f'Gold: {player.gold}')
         print(f'Potions: {potions}')
         print(f'Elixirs: {elixirs}')
-        print(f'Attack damage: {attk}')
+        print(f'Attack damage: {player.atk}')
         draw_line()
         print('1. Buy potion (heal for 30 HP) - 5 gold')
         print('2. Buy elixir (heal for 50 HP) - 10 gold')
@@ -205,23 +178,23 @@ def shop():
         choice = input('> ')
 
         if choice == '1':
-            if gold - 5 >= 5:
+            if player.gold - 5 >= 5:
                 potions += 1
-                gold -= 5
+                player.gold -= 5
                 print('Potion purchased for 5 gold')
             else:
                 print('Not enough gold!')
         if choice == '2':
-            if gold - 10 >= 10:
+            if player.gold - 10 >= 10:
                 elixirs += 1
-                gold -= 10
+                player.gold -= 10
                 print('Elixir purchased for 5 gold')
             else:
                 print('Not enough gold!')
         if choice == '3':
-            if gold - 15 >= 15:
-                attk += 2
-                gold -= 15
+            if player.gold - 15 >= 15:
+                player.atk += 2
+                player.gold -= 15
                 print('Weapon upgrade purchased for 5 gold')
             else:
                 print('Not enough gold!')
@@ -252,6 +225,7 @@ while run:
             draw_line()
             menu = False
             play = True
+
         if choice == '2':
             # handles error if file does not exist
             try:
@@ -283,27 +257,37 @@ while run:
                 print("No save file exists")
                 draw_line()
                 input(': ')
+
         if choice == '3':
             rules = True
+
         if choice == '4':
             quit()
+
     while play:
         save() # auto saves game
         clear()
         # controls battle encounters
         if not standing:
             if biom[map[x][y]]['e'] == True:
-                if random.randint(0, 100) <= 30:
-                    battle()
+                if random.randint(0, 100) <= 40:
+                    fight = True
+                    battle(Enemy.spawn_random_enemy())
+                    
         # shows current player location
-        print(f"Current Location: {biom[map[x][y]]['tile']}")
+        try:
+            print(f"Current Location: {biom[map[x][y]]['tile']}")
+        except IndexError:
+            print("I have moved too far away, I should turn back")
         draw_line()
-        print(name)
-        print(f"HP: {hp}/{hp_max}")
-        print(f"Attack: {atk}")
+        print(player.name)
+        print(f"HP: {player.hp}/{player.hp_max}")
+        print(f"Attack: {player.atk}")
         print(f"Potions: {potions}")
         print(f"Elixirs: {elixirs}")
-        print(f"Gold: {gold}")
+        print(f"Gold: {player.gold}")
+        print(f"Coordinates: {x},{y}")
+        print(standing)
         draw_line()
         # menu for player 
         print("0. Save and quit")
@@ -319,13 +303,14 @@ while run:
             print('5. Use potion')
         if elixirs > 0:
             print('6. Use elixir')
-        if map[y][x] == 'shop' or map[y][x] == 'cave':
+        if map[y][x] == 'shop' or map[y][x] == 'cave' or map[y][x] == 'crypt':
             print(f'7. Enter {map[y][x]}')
 
-        dest = str(input(";"))
+        dest = str(input("> "))
         if dest == '0':
             play = False
             menu = True
+
         if dest == '1':
             y -= 1
             standing = False
@@ -338,6 +323,7 @@ while run:
         if dest == '4':
             x -= 1
             standing = False
+
         if dest == '5':
             if potions > 0:
                 potions -= 1
@@ -360,5 +346,5 @@ while run:
                 shop()
             if map[y][x] == 'cave':
                 cave_boss_battle()
-        else:
-            standing = True
+            else:
+                standing = True
