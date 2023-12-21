@@ -24,8 +24,6 @@ gold = 0
 x = 0
 y = 0
 
-enemy_list = ['Goblin', 'Orc', 'Slime']
-
 mobs = {
     'Goblin':{
         'hp': 15,
@@ -61,12 +59,14 @@ def clear():
 
 def save():
     player_stats = [
-        name, 
-        str(hp),
-        str(atk),
+        player.name,
+        str(player.level),
+        str(player.xp), 
+        str(player.hp),
+        str(player.atk),
         str(potions),
         str(elixirs),
-        str(gold),
+        str(player.gold),
         str(x),
         str(y),
         str(key)
@@ -90,7 +90,7 @@ def battle():
     global h_p, attk, hp_max, gold, potions, elixirs, boss
 
     if not boss:
-        enemy = random.choice(enemy_list)
+        enemy = Enemy.spawn_random_enemy()
     else:
         enemy = 'Boss'
     hp = mobs[enemy][hp]
@@ -101,10 +101,10 @@ def battle():
     while fight:
         clear()
         draw_line()
-        print(f"Enemy {enemy} attacks!")
+        print(f"Enemy {enemy.name} attacks!")
         draw_line()
-        print(f"{enemy}'s HP: {hp}/{hpmax}")
-        print(f"{name}'s HP: {h_p}/{hp_max}")
+        print(f"{enemy.name}'s HP: {enemy.hp}/{enemy.hp_max}")
+        print(f"{player.name}'s HP: {player.hp}/{player.hp_max}")
         print(f"Potions: {potions}")
         print(f"Elixirs: {elixirs}")
         draw_line()
@@ -112,34 +112,34 @@ def battle():
         if potions > 0:
             print('2 - Use potion')
         if elixirs > 0:
-            print('2 - Use elixir')
+            print('3 - Use elixir')
         draw_line()
         choice = input(": ")
 
         if choice == '1':
-            hp -= attk
-            print(f'{name} dealt {attk} damage to {enemy}')
-            if hp > 0:
-                h_p -= atk
-                print(f'{enemy} attacks {name} for {atk} damage')
+            enemy.hp -= player.atk
+            print(f'{player.name} dealt {player.atk} damage to {enemy.name}')
+            if enemy.hp > 0:
+                player.hp -= enemy.atk
+                print(f'{enemy.name} attacks {player.name} for {enemy.atk} damage')
 
         if choice == '2':
             if potions > 0:
                 potions -= 1
                 use_potion(30)
-                h_p -= atk
-                print(f'{enemy} attacks {name} for {atk} damage')
+                player.hp -= enemy.atk
+                print(f'{enemy.name} attacks {player.name} for {enemy.atk} damage')
 
         if choice == '3':
             if elixirs > 0:
                 elixirs -= 1
                 use_potion(30)
-                h_p -= atk
-                print(f'{enemy} attacks {name} for {atk} damage')
+                player.hp -= enemy.atk
+                print(f'{enemy.name} attacks {player.name} for {enemy.atk} damage')
 
         # checks player health
-        if h_p <= 0:
-            print(f'{name} has been defeated by {enemy}')
+        if player.hp <= 0:
+            print(f'{player.name} has been defeated by {enemy.name}')
             draw_line()
             fight = False
             play = False
@@ -148,14 +148,15 @@ def battle():
             input(': ')
             quit()
         # checks enemy health
-        if hp <= 0:
-            print(f'{name} has defeated {enemy}')
+        if enemy.hp <= 0:
+            print(f'{player.name} has defeated {enemy.name}')
+            draw_line()
+            player.check_xp(enemy)
             draw_line()
             fight = False
-            gold += g
             if random.randint(0, 100) < 30:
                 potions += 1
-                print("You dound a potion")
+                print("You found a potion")
             if enemy == 'Boss':
                 print("Congratulations you have defeated the Boss")
                 boss = False
@@ -247,6 +248,7 @@ while run:
         if choice == '1':
             clear()
             name = input('What is your name? ')
+            player = Character(name, 1, 10, 2, 0, 0 )
             draw_line()
             menu = False
             play = True
@@ -256,18 +258,21 @@ while run:
                 f = open('load.txt', 'r')
                 save_file = f.readlines
                 # checks if file has all the proper data
-                if len(save_file) == 9:
+                if len(save_file) == 11:
                     name = save_file[0]
-                    hp = int(save_file[1])
-                    atk = int(save_file[2])
-                    potions = int(save_file[3])
-                    elixirs = int(save_file[4])
-                    gold = int(save_file[5])
-                    x = int(save_file[6])
-                    y = int(save_file[7])
-                    key = bool(save_file[8])
+                    lvl = int(save_file[1])
+                    xp = int(save_file[2])
+                    hp = int(save_file[3])
+                    atk = int(save_file[4])
+                    potions = int(save_file[5])
+                    elixirs = int(save_file[6])
+                    gold = int(save_file[7])
+                    x = int(save_file[8])
+                    y = int(save_file[9])
+                    key = bool(save_file[10])
+                    player = Character(name, lvl, hp, atk, gold, xp)
                     clear()
-                    print(f'welcome back {name} to your adventure!')
+                    print(f'welcome back {player.name} to your adventure!')
                     input(': ')
                     menu = False
                     play = True

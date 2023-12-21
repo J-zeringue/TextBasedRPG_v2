@@ -1,36 +1,71 @@
 import random
+from world import*
 
 class Character():
-    def __init__(self, name, level, xp, hp, mana, atk):
+    def __init__(self, name, level, hp, atk, gold=0, xp=0):
         self.name = name
         self.level = level
         self.xp = xp
         self.xp_to_lvl = 100
         self.hp = hp
         self.hp_max = self.hp
-        self.mana = mana
-        self.mana_max = self.mana
         self.atk = atk
+        self.gold = gold
     
     # checks xp after every battle and levels up player if conditions are met
     def check_xp(self, enemy):
-        print(f'{self.name} gains {enemy.xp}')
-        self.xp += enemy.xp
-        if self.xp >= self.xp_to_lvl:
-            self.level += 1
-            print(f'{self.name} has reached level {self.level}')
-            self.hp_max += 5
-            self.mana_max += 2
-            self.atk += 1
-            print(f'Your health, mana and attack increase to {self.hp_max}, {self.mana_max} and {self.atk}')
-            self.xp = self.xp - self.xp_to_lvl
-            self.xp_to_lvl = self.xp_to_lvl + (self.level*15)
+        if self.level < 20:
+            print(f'{self.name} gains {enemy.xp}')
+            self.xp += enemy.xp
+            if self.xp >= self.xp_to_lvl:
+                self.level += 1
+                print(f'{self.name} has reached level {self.level}')
+                self.hp_max += 5
+                self.atk += 1
+                print(f'Your health and attack damage increase to {self.hp_max} and {self.atk}')
+                self.xp = self.xp - self.xp_to_lvl
+                self.xp_to_lvl = self.xp_to_lvl + (self.level*15)
+        else:
+            return
 
 class Enemy(Character):
-    def __init__(self, name, level, xp, hp, mana, atk):
-        super().__init__(level, name, xp, hp, mana, atk)
+    def __init__(self, name, level, hp, atk, gold, xp):
+        super().__init__(name, level, hp, atk, gold=0, xp=0)
+
+    # helper function to increase the level and stats of randomly spawned enemies to the player level:
+    def level_up_enemy(self, player):
+        i = 1
+        while i <= self.level:
+            self.hp += 5
+            self.atk += 1
+            self.hp_max = self.hp
+            self.gold += 2
+            self.xp += 2
+            i += 1
+    
+    # generates a random enemy object
+    def spawn_random_enemy():
+        enemy_type_i = random.randrange(0, len(enemy_list))
+        enemy_strength_i = random.randrange(0, len(enemy_list[enemy_type_i]))
+        if enemy_type_i == 0:
+            if enemy_strength_i == 0:
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 1, 10, 2, 0, 0)
+                enemy.level_up_enemy
+            if enemy_strength_i == 1:
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 4, 15, 3, 2, 2)
+                enemy.level_up_enemy
+            if enemy_strength_i == 1:
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 8, 20, 5, 6, 6)
+                enemy.level_up_enemy
+            if enemy_strength_i == 1:
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 12, 25, 8, 12, 12)
+                enemy.level_up_enemy
+            if enemy_strength_i == 1:
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 16, 30, 12, 20, 20)
+                enemy.level_up_enemy
+        return enemy
 
 
 class Boss(Character):
-    def __init__(self, name, level, xp, hp, mana, atk):
-        super().__init__(level, name, xp, hp, mana, atk)
+    def __init__(self, name, level, hp, atk, gold, xp):
+        super().__init__(name, level, hp, atk, gold=0, xp=0)
