@@ -70,7 +70,7 @@ biom = {
 
 enemy_list = [
     ['Goblin', 'Goblin Fighter', 'Goblin Rogue', 'Goblin Tinker', 'Goblin Leader'],
-    ['Orc Peon', 'Orc Warrior', 'Orc Scout' 'Orc Berserker', 'Orc Cheiftan'],
+    ['Orc Peon', 'Orc Warrior', 'Orc Scout', 'Orc Berserker', 'Orc Cheiftan'],
     ['Green Slime', 'Red Slime', 'Blue Slime', 'Yellow Slime', 'Purple Slime'],
     ['Skeleton', 'Skeleton Archer', 'Skeleton Fighter', 'Skeleton Wizard', 'Skeleton Lord'],
     ['Zombie', 'Mummy', 'Zombie Lord', 'Mummy Lord', 'Mummy Warrior Lord'],

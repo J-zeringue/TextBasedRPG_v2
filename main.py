@@ -105,22 +105,19 @@ def battle(enemy):
             clear()
 
 def cave_boss_battle():
-    global boss, key, fight
+    global boss, fight
 
     while boss:
         clear()
         draw_line()
-        # place holder until more bosses are built out
-        print('A dangerous boss lies within, will you fight or flee?')
-        if key:
-            print('1. Use key')
+        slow_print('A dangerous dragon lies within, will you fight or flee?')
+        print('1. Enter')
         print('2. Turn Back')
         choice = input('> ')
 
         if choice == '1':
-            if key:
-                fight = True
-                battle()
+            fight = True
+            battle(Boss.spawn_boss())
         if choice == '2':
             boss = False
 
@@ -176,7 +173,7 @@ while run:
         clear()
         print('1. NEW GAME')
         print('2. RULES')
-        print('4. QUIT GAME')
+        print('3. QUIT GAME')
         draw_line()
 
         if rules:
@@ -190,7 +187,7 @@ while run:
         if choice == '1':
             clear()
             name = input('What is your name? ')
-            player = Character(name, 1, 20, 3, 50, 0)
+            player = Character(name, 100, 20, 3, 5000, 0)
             player.equipped_armor = leather_armor
             player.equipped_weapon = iron_sword
             draw_line()

@@ -26,20 +26,17 @@ class Character():
     
     # checks xp after every battle and levels up player if conditions are met
     def check_xp(self, enemy):
-        if self.level < 20:
-            slow_print(f'{self.name} gains {enemy.xp} experience and {enemy.gold} gold.')
-            self.xp += enemy.xp
-            self.gold += enemy.gold
-            if self.xp >= self.xp_to_lvl:
-                self.level += 1
-                slow_print(f'{self.name} has reached level {self.level}')
-                self.hp_max += 5
-                self.atk += 1
-                slow_print(f'Your health and attack damage increase to {self.hp_max} and {self.atk}')
-                self.xp = self.xp - self.xp_to_lvl
-                self.xp_to_lvl = self.xp_to_lvl + (self.level*15)
-        else:
-            return
+        slow_print(f'{self.name} gains {enemy.xp} experience and {enemy.gold} gold.')
+        self.xp += enemy.xp
+        self.gold += enemy.gold
+        if self.xp >= self.xp_to_lvl:
+            self.level += 1
+            slow_print(f'{self.name} has reached level {self.level}')
+            self.hp_max += 5
+            self.atk += 1
+            slow_print(f'Your health and attack damage increase to {self.hp_max} and {self.atk}')
+            self.xp = self.xp - self.xp_to_lvl
+            self.xp_to_lvl = self.xp_to_lvl + (self.level*15)
     
     # function to attack a target
     def attack(self, target):
@@ -55,7 +52,11 @@ class Character():
                 damage = self.atk - target.equipped_armor.armor_rating
             if self.equipped_weapon != None:
                 damage = (self.atk + self.equipped_weapon.atk_rating) - target.equipped_armor.armor_rating
-            target.hp -= damage
+            if damage <= target.equipped_armor.armor_rating:
+                damage = 0
+                target.hp -= damage
+            else:
+                target.hp -= damage
         if target.equipped_armor == None:
             slow_print(f'{self.name} dealt {damage} damage to {target.name}! {0} resisted by armor!')
         else:
@@ -67,7 +68,7 @@ class Enemy(Character):
         super().__init__(name, level, hp, atk, gold, xp)
 
     # helper function to increase the level and stats of randomly spawned enemies to the player level:
-    def level_up_enemy(self, player):
+    def level_up_enemy(self):
         i = 1
         while i <= self.level:
             self.hp += 5
@@ -167,7 +168,23 @@ class Enemy(Character):
 class Boss(Character):
     def __init__(self, name, level, hp, atk, gold, xp):
         super().__init__(name, level, hp, atk, gold, xp)
+    
+    # helper function to increase the stats of bosses when they spawn
+    def level_up_enemy(self, player):
+        i = 1
+        while i <= self.level:
+            self.hp += 5
+            self.atk += 1
+            self.hp_max = self.hp
+            self.gold += 2
+            self.xp += 2
+            i += 1
 
+    # spawns 1 of the 4 bosses at random
+    def spawn_boss():
+        boss_choice = random.randrange(0, len(boss_list)-1)
+        enemy = boss_list.pop(boss_choice)
+        return enemy
 
 
 class Item():
@@ -254,5 +271,22 @@ plate_armor = Armor('Steel Plate', 200, 'armor', 5)
 mithril_armor = Armor('Mithril Half-Plate', 400, 'armor', 7)
 meteor_armor = Armor('Meteorite Full-Plate', 600, 'armor', 12)
 
+# armor for dragon bosses
+dragon_scale = Armor('Dragon Scales', 1000, 'armor', 15)
+
 # armor queue for shop upgrades
 armor_upgrades = [meteor_armor, mithril_armor, plate_armor, chain_armor]
+
+# Boss objects
+black_dragon = Boss('Anomandarus Son of Darkness', 75, 100, 20, 1000, 150)
+black_dragon.equipped_armor = dragon_scale
+
+red_dragon = Boss('Korlat Daughter of Darkness', 50, 100, 20, 1000, 150)
+red_dragon.equipped_armor = dragon_scale
+
+blue_dragon = Boss('Orlock Son of Chaos', 35, 100, 20, 1000, 150)
+
+white_dragon = Boss('Silanus Daughter of Chaos', 25, 100, 20, 1000, 150)
+
+# Boss list for random spawning
+boss_list = [black_dragon, red_dragon, blue_dragon, white_dragon]
