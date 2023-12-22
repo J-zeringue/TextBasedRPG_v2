@@ -15,11 +15,9 @@ class Character():
         # sets up player and enemy inventory (not used for enemies at the moment)
         self.inventory = [
             [], # 0 potions are stored
-            [], # 1 weapons are stored
-            [], # 2 armor will be stored
-            []] # 3 special is stored
-        self.equipped_armor = leather_armor
-        self.equipped_weapon = iron_sword
+            []] # 1 special items stored
+        self.equipped_armor = None
+        self.equipped_weapon = None
 
     def check_potion_inv_count(self):
         if not self.inventory[0]:
@@ -45,8 +43,23 @@ class Character():
     
     # function to attack a target
     def attack(self, target):
-        target.hp -= self.atk
-        slow_print(f'{self.name} dealt {self.atk} damage to {target.name}')
+        damage = 0
+        if target.equipped_armor == None:
+            if self.equipped_weapon == None:
+                damage = self.atk
+            if self.equipped_weapon != None:
+                damage = self.atk + self.equipped_weapon.atk_rating
+            target.hp -= damage
+        if target.equipped_armor != None:
+            if self.equipped_weapon == None:
+                damage = self.atk - target.equipped_armor.armor_rating
+            if self.equipped_weapon != None:
+                damage = (self.atk + self.equipped_weapon.atk_rating) - target.equipped_armor.armor_rating
+            target.hp -= damage
+        if target.equipped_armor == None:
+            slow_print(f'{self.name} dealt {damage} damage to {target.name}! {0} resisted by armor!')
+        else:
+            slow_print(f'{self.name} dealt {damage} damage to {target.name}! {target.equipped_armor.armor_rating} resisted by armor!')
 
 
 class Enemy(Character):
@@ -153,7 +166,7 @@ class Enemy(Character):
 
 class Boss(Character):
     def __init__(self, name, level, hp, atk, gold, xp):
-        super().__init__(name, level, hp, atk, gold=0, xp=0)
+        super().__init__(name, level, hp, atk, gold, xp)
 
 
 
@@ -166,22 +179,14 @@ class Item():
     def add_item_to_inventoy(self, character):
         if self.category == 'potion':
             character.inventory[0].append(self)
-        if self.category == 'weapon':
-            character.inventory[1].append(self)
-        if self.category == 'armor':
-            character.inventory[2].append(self)
         if self.category == 'special':
-            character.inventory[3].append(self)
+            character.inventory[1].append(self)
     
     def remove_item_from_inventory(self, character):
         if self.category == 'potion':
             character.inventory[0].remove(self)
-        if self.category == 'weapon':
-            character.inventory[1].remove(self)
-        if self.category == 'armor':
-            character.inventory[2].remove(self)
         if self.category == 'special':
-            character.inventory[3].remove(self)
+            character.inventory[1].remove(self)
 
 class Potion(Item):
     def __init__(self, name, g_value, category):
@@ -199,41 +204,55 @@ class Potion(Item):
         self.remove_item_from_inventory(character)
 
 class Weapon(Item):
-    def __init__(self, name, g_value, category, atk_rating, armor_ignore):
+    def __init__(self, name, g_value, category, atk_rating):
         super().__init__(name, g_value, category)
         self.atk_rating = atk_rating
-        self.armor_ignore = armor_ignore
+        
     
-    def equip_weapon(self, character):
-        character.equip_weapon == None
-        character.equip_weapon = self
-        print(f'{character.equip_weapon.name} has been equipped')
+    #upgrades weapon by replacing it with a created weapon, to be used in the shop
+    def upgrade_weapon(character):
+        new_weapon = weapon_upgrades.pop()
+        character.equipped_weapon = new_weapon
+        slow_print(f'Weapon upgraded to {character.equipped_weapon.name}!')
 
 class Armor(Item):
     def __init__(self, name, g_value, category, armor_rating):
         super().__init__(name, g_value, category)
         self.armor_rating = armor_rating
-    
-    def equip_armor(self, character):
-        character.equipped_armor == None
-        character.equipped_armor = self
-        slow_print(f'{character.equipped_armor.name} has been equipped')
+
+    #upgrades armor by replacing it with a created weapon, to be used in the shop
+    def upgrade_armor(character):
+        new_armor = armor_upgrades.pop()
+        character.equipped_armor = new_armor
+        slow_print(f'Armor upgraded to {character.equipped_armor.name}!')
 
 
 def slow_print(words):
     for word in words:
-        time.sleep(0.05)
+        time.sleep(0.03)
         print(word, end='', flush=True)
     print('')
 
 
 # creates potion object
+potion = Potion('Health Potion', 10, 'potion')
 
-potion = Potion('Health Potion', 5, 'potion')
+# creates new weapons
+iron_sword = Weapon('Iron Sword', 5, 'weapon', 1)
+steel_sword = Weapon('Steel Sword', 100, 'weapon', 3)
+obsidian_sword = Weapon('Obsidian Sword', 300, 'weapon', 6)
+mithril_sword = Weapon('Mithril Sword', 400, 'weapon', 9)
+meteor_sword = Weapon('Meteorite Sword', 600, 'weapon', 15)
 
-iron_sword = Weapon('Iron Sword', 5, 'weapon', 1, 0)
+# weapon queue for shop upgrades
+weapon_upgrades = [meteor_sword, mithril_sword, obsidian_sword, steel_sword]
 
-
-
-
+# creates new armors
 leather_armor = Armor('Leather Armor', 5, 'armor', 1)
+chain_armor = Armor('Chainmail', 100, 'armor', 3)
+plate_armor = Armor('Steel Plate', 200, 'armor', 5)
+mithril_armor = Armor('Mithril Half-Plate', 400, 'armor', 7)
+meteor_armor = Armor('Meteorite Full-Plate', 600, 'armor', 12)
+
+# armor queue for shop upgrades
+armor_upgrades = [meteor_armor, mithril_armor, plate_armor, chain_armor]
