@@ -1,5 +1,6 @@
 import os
 import random
+import time
 from character import*
 from world import*
 
@@ -15,12 +16,9 @@ buy = False
 speak = False
 boss = False
 
-potions = 1
-elixirs = 0
-gold = 0
 # coords of player on map
-x = 0
-y = 0
+x = 7
+y = 9
 
 
 #current_tile = map[x][y]
@@ -32,7 +30,7 @@ y = 0
 
 # draws line to seprate text in game play loop
 def draw_line():
-    print('|----------------------|')
+    print('------------------------')
 
 # function that clears console
 def clear():
@@ -46,7 +44,7 @@ def save():
         str(player.xp), 
         str(player.hp),
         str(player.atk),
-        str(potions),
+        str(player.check_potion_inv_count()),
         str(elixirs),
         str(player.gold),
         str(x),
@@ -60,82 +58,67 @@ def save():
         f.write(item + '\n')
     f.close()
 
-def use_potion(amount):
-    if player.hp + amount <= player.hp_max:
-        player.hp += amount
-    else:
-        player.hp = player.hp_max
-    print(f'{player.name} uses a potion and heals for {amount}')
-
 def battle(enemy):
-    global potions, elixirs, boss, fight
+    global potion, boss, fight, play, run
+
+    draw_line()
+    slow_print(f"Enemy {enemy.name} attacks!")
+    draw_line()
 
     while fight:
-        draw_line()
-        print(f"Enemy {enemy.name} attacks!")
-        draw_line()
         print(f"{enemy.name}'s HP: {enemy.hp}/{enemy.hp_max}")
         print(f"{player.name}'s HP: {player.hp}/{player.hp_max}")
-        print(f"Potions: {potions}")
-        print(f"Elixirs: {elixirs}")
+        print(f"Potions: {player.check_potion_inv_count()}")
         draw_line()
         print('1 - Attack')
-        if potions > 0:
+        if player.check_potion_inv_count() > 0:
             print('2 - Use potion')
-        if elixirs > 0:
-            print('3 - Use elixir')
         print('4 - Flee')
         draw_line()
         choice = input("> ")
 
         if choice == '1':
-            enemy.hp -= player.atk
-            print(f'{player.name} dealt {player.atk} damage to {enemy.name}')
+            player.attack(enemy)
+            draw_line()
             if enemy.hp > 0:
-                player.hp -= enemy.atk
-                print(f'{enemy.name} attacks {player.name} for {enemy.atk} damage')
+                enemy.attack(player)
 
         if choice == '2':
-            if potions > 0:
-                potions -= 1
-                use_potion(30)
-                player.hp -= enemy.atk
-                print(f'{enemy.name} attacks {player.name} for {enemy.atk} damage')
+            if player.check_potion_inv_count() > 0:
+                potion.use_potion(player)
+                draw_line()
+                enemy.attack(player)
 
         if choice == '3':
-            if elixirs > 0:
-                elixirs -= 1
-                use_potion(30)
-                player.hp -= enemy.atk
-                print(f'{enemy.name} attacks {player.name} for {enemy.atk} damage')
+            pass
 
         if choice == '4':
             if random.randint(0, 100) >= 33:
-                print(f'{player.name} flees from {enemy.name}')
+                slow_print(f'{player.name} flees from {enemy.name}')
                 fight = False
             else:
-                print('Your attempt to flee has failed!')
+                slow_print('Your attempt to flee has failed!')
 
         # checks player health
         if player.hp <= 0:
-            print(f'{player.name} has been defeated by {enemy.name}')
+            slow_print(f'{player.name} has been defeated by {enemy.name}')
             draw_line()
             fight = False
             play = False
             run = False
-            print('GAME OVER!')
-            input(': ')
+            slow_print('GAME OVER!')
+            input('> ')
             quit()
         # checks enemy health
         if enemy.hp <= 0:
-            print(f'{player.name} has defeated {enemy.name}')
+            slow_print(f'{player.name} has defeated {enemy.name}')
             draw_line()
             player.check_xp(enemy)
             draw_line()
             fight = False
-            if random.randint(0, 100) < 30:
-                potions += 1
-                print("You found a potion")
+            if random.randint(0, 100) < 25:
+                potion.add_item_to_inventoy(player)
+                slow_print("You found a Health Potion")
             if enemy == 'Boss':
                 print("Congratulations you have defeated the Boss")
                 boss = False
@@ -164,15 +147,14 @@ def cave_boss_battle():
 
 
 def shop():
-    global buy, potions, elixirs
+    global buy
     while buy:
         clear()
         draw_line()
         print("Welcome to Krupp's mysterous mysterions!")
         draw_line()
         print(f'Gold: {player.gold}')
-        print(f'Potions: {potions}')
-        print(f'Elixirs: {elixirs}')
+        print(f'Potions: {player.check_potion_inv_count()}')
         print(f'Attack damage: {player.atk}')
         draw_line()
         print('1. Buy potion (heal for 30 HP) - 5 gold')
@@ -185,9 +167,9 @@ def shop():
 
         if choice == '1':
             if player.gold - 5 >= 5:
-                potions += 1
+                potion.add_item_to_inventoy(player)
                 player.gold -= 5
-                print('Potion purchased for 5 gold')
+                print('Health Potion purchased for 5 gold')
             else:
                 print('Not enough gold!')
         if choice == '2':
@@ -271,7 +253,7 @@ while run:
             quit()
 
     while play:
-        save() # auto saves game
+        # save() # auto saves game
         clear()
         # controls battle encounters
         if not standing:
@@ -288,7 +270,7 @@ while run:
         draw_line()
         print(player.name)
         print(f"HP: {player.hp}/{player.hp_max} Attack: {player.atk}")
-        print(f"Potions: {potions} Elixirs: {elixirs}")
+        print(f"Potions: {player.check_potion_inv_count()} Weapon: {player.equipped_weapon.name} Armor: {player.equipped_armor.name}")
         print(f"Gold: {player.gold} Level: {player.level} EXP: {player.xp}/{player.xp_to_lvl} Coordinates: {x},{y}")
         draw_line()
         # menu for player 
@@ -301,10 +283,8 @@ while run:
             print("3. South")
         if x > 0:
             print("4. West")
-        if potions > 0:
+        if player.check_potion_inv_count() > 0:
             print('5. Use potion')
-        if elixirs > 0:
-            print('6. Use elixir')
         if map[y][x] == 'shop' or map[y][x] == 'cave' or map[y][x] == 'crypt':
             print(f'7. Enter {map[y][x]}')
 
@@ -325,21 +305,11 @@ while run:
         if dest == '4':
             x -= 1
             standing = False
-
         if dest == '5':
-            if potions > 0:
-                potions -= 1
-                use_potion(30)
+            if player.check_potion_inv_count() > 0:
+                potion.use_potion(player)
             else:
                 print('No potions!')
-            input('> ')
-            standing = True
-        if dest == '6':
-            if elixirs > 0:
-                elixirs -= 1
-                use_potion(50)
-            else:
-                print('No elixirs!')
             input('> ')
             standing = True
         if dest == '7':
