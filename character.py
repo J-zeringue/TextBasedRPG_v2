@@ -84,83 +84,83 @@ class Enemy(Character):
         enemy_strength_i = random.randrange(0, len(enemy_list[enemy_type_i])-1)
         if enemy_type_i == 0:
             if enemy_strength_i == 0:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 1, 10, 2, 2, 2)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 1, 10, 2, 5, 5)
                 enemy.level_up_enemy
             if enemy_strength_i == 1:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 4, 15, 3, 4, 4)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 4, 15, 3, 10, 10)
                 enemy.level_up_enemy
             if enemy_strength_i == 2:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 8, 20, 5, 8, 8)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 8, 20, 5, 15, 15)
                 enemy.level_up_enemy
             if enemy_strength_i == 3:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 12, 25, 8, 12, 12)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 12, 25, 8, 20, 20)
                 enemy.level_up_enemy
             if enemy_strength_i == 4:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 16, 30, 12, 20, 20)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 16, 30, 12, 25, 25)
                 enemy.level_up_enemy
         if enemy_type_i == 1:
             if enemy_strength_i == 0:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 1, 10, 2, 2, 2)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 1, 10, 2, 5, 5)
                 enemy.level_up_enemy
             if enemy_strength_i == 1:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 4, 15, 3, 4, 4)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 4, 15, 3, 10, 10)
                 enemy.level_up_enemy
             if enemy_strength_i == 2:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 8, 20, 5, 8, 8)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 8, 20, 5, 15, 15)
                 enemy.level_up_enemy
             if enemy_strength_i == 3:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 12, 25, 8, 12, 12)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 12, 25, 8, 20, 20)
                 enemy.level_up_enemy
             if enemy_strength_i == 4:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 16, 30, 12, 20, 20)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 16, 30, 12, 25, 25)
                 enemy.level_up_enemy
         if enemy_type_i == 2:
             if enemy_strength_i == 0:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 1, 10, 2, 2, 2)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 1, 10, 2, 5, 5)
                 enemy.level_up_enemy
             if enemy_strength_i == 1:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 4, 15, 3, 4, 4)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 4, 15, 3, 10, 10)
                 enemy.level_up_enemy
             if enemy_strength_i == 2:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 8, 20, 5, 8, 8)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 8, 20, 5, 15, 15)
                 enemy.level_up_enemy
             if enemy_strength_i == 3:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 12, 25, 8, 12, 12)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 12, 25, 8, 20, 20)
                 enemy.level_up_enemy
             if enemy_strength_i == 4:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 16, 30, 12, 20, 20)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 16, 30, 12, 25, 25)
                 enemy.level_up_enemy
         if enemy_type_i == 3:
             if enemy_strength_i == 0:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 1, 10, 2, 2, 2)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 1, 10, 2, 5, 5)
                 enemy.level_up_enemy
             if enemy_strength_i == 1:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 4, 15, 3, 4, 4)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 4, 15, 3, 10, 10)
                 enemy.level_up_enemy
             if enemy_strength_i == 2:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 8, 20, 5, 8, 8)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 8, 20, 5, 15, 15)
                 enemy.level_up_enemy
             if enemy_strength_i == 3:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 12, 25, 8, 12, 12)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 12, 25, 8, 20, 20)
                 enemy.level_up_enemy
             if enemy_strength_i == 4:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 16, 30, 12, 20, 20)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 16, 30, 12, 25, 25)
                 enemy.level_up_enemy
         if enemy_type_i == 4:
             if enemy_strength_i == 0:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 1, 10, 2, 2, 2)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 1, 10, 2, 5, 5)
                 enemy.level_up_enemy
             if enemy_strength_i == 1:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 4, 15, 3, 4, 4)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 4, 15, 3, 10, 10)
                 enemy.level_up_enemy
             if enemy_strength_i == 2:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 8, 20, 5, 8, 8)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 8, 20, 5, 15, 15)
                 enemy.level_up_enemy
             if enemy_strength_i == 3:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 12, 25, 8, 12, 12)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 12, 25, 8, 20, 20)
                 enemy.level_up_enemy
             if enemy_strength_i == 4:
-                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 16, 30, 12, 20, 20)
+                enemy = Enemy(enemy_list[enemy_type_i][enemy_strength_i], 16, 30, 12, 25, 25)
                 enemy.level_up_enemy
         return enemy
 

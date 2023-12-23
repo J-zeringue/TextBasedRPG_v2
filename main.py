@@ -195,7 +195,7 @@ while run:
         if choice == '1':
             clear()
             name = input('What is your name? ')
-            player = Character(name, 1, 5000, 500, 5000, 0)
+            player = Character(name, 1, 25, 3, 50, 0)
             player.equipped_armor = leather_armor
             player.equipped_weapon = iron_sword
             draw_line()
