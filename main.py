@@ -21,13 +21,6 @@ x = 7
 y = 9
 
 
-#current_tile = map[x][y]
-#print(current_tile)
-#name_of_tile = biom[current_tile]['tile']
-#print(name_of_tile)
-#enemy_tile = biom[current_tile]['e']
-#print(enemy_tile)
-
 # draws line to seprate text in game play loop
 def draw_line():
     print('------------------------')
@@ -38,7 +31,7 @@ def clear():
 
 # battle loop
 def battle(enemy):
-    global potion, boss, fight, play, run
+    global boss, fight, play, run
 
     draw_line()
     slow_print(f"Enemy {enemy.name} attacks!")
@@ -98,15 +91,28 @@ def battle(enemy):
             if random.randint(0, 100) < 25:
                 potion.add_item_to_inventoy(player)
                 slow_print("You found a Health Potion")
-            if enemy == 'Boss':
-                print("Congratulations you have defeated the Boss")
-                boss = False
-            input('> ')
-            clear()
+            if boss == True:
+                slow_print(f'you have defeated {enemy.name}')
+                player.check_xp(enemy)
+                if not boss_list:
+                    boss = False
+                    fight = False
+                    play = False
+                    run = False
+                    slow_print('With the four dragons defeated the region can now know peace')
+                    slow_print('CONGRATULATIONS! YOU HAVE BEATEN THE GAME!')
+                    input('> ')
+                    quit()
+                else:
+                    slow_print(f"Congratulations you have defeated {enemy.name}")
+                    boss = False
+                    fight = False
+                    input('> ')
+                    clear()
 
 def cave_boss_battle():
     global boss, fight
-
+    boss = True
     while boss:
         clear()
         draw_line()
@@ -145,28 +151,30 @@ def shop():
         draw_line()
 
         choice = input('> ')
-
-        if choice == '1':
-            if player.gold - 5 >= 5:
-                potion.add_item_to_inventoy(player)
-                player.gold -= 5
-                print('Health Potion purchased for 5 gold')
-            else:
-                print('Not enough gold!')
-        if choice == '2':
-            if player.gold - armor_upgrades[-1].g_value >= armor_upgrades[-1].g_value:
-                player.gold -= armor_upgrades[-1].g_value
-                Armor.upgrade_armor(player)
-            else:
-                print('Not enough gold!')
-        if choice == '3':
-            if player.gold - weapon_upgrades[-1].g_value >= weapon_upgrades[-1].g_value:
-                player.gold -= weapon_upgrades[-1].g_value
-                Weapon.upgrade_weapon(player)
-            else:
-                print('Not enough gold!')
-        if choice == '4':
-            buy = False
+        try:
+            if choice == '1':
+                if player.gold - 5 >= 5:
+                    potion.add_item_to_inventoy(player)
+                    player.gold -= 5
+                    print('Health Potion purchased for 5 gold')
+                else:
+                    print('Not enough gold!')
+            if choice == '2':
+                if player.gold - armor_upgrades[-1].g_value >= armor_upgrades[-1].g_value:
+                    player.gold -= armor_upgrades[-1].g_value
+                    Armor.upgrade_armor(player)
+                else:
+                    print('Not enough gold!')
+            if choice == '3':
+                if player.gold - weapon_upgrades[-1].g_value >= weapon_upgrades[-1].g_value:
+                    player.gold -= weapon_upgrades[-1].g_value
+                    Weapon.upgrade_weapon(player)
+                else:
+                    print('Not enough gold!')
+            if choice == '4':
+                buy = False
+        except IndexError:
+            print('No more upgrades available!')
 
 while run:
     while menu:
@@ -187,7 +195,7 @@ while run:
         if choice == '1':
             clear()
             name = input('What is your name? ')
-            player = Character(name, 100, 20, 3, 5000, 0)
+            player = Character(name, 1, 5000, 500, 5000, 0)
             player.equipped_armor = leather_armor
             player.equipped_weapon = iron_sword
             draw_line()
@@ -205,7 +213,7 @@ while run:
         # controls battle encounters
         if not standing:
             if biom[map[y][x]]['e'] == True:
-                if random.randint(0, 100) <= 33:
+                if random.randint(0, 100) <= 0:
                     fight = True
                     battle(Enemy.spawn_random_enemy())
 

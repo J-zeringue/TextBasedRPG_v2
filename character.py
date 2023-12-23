@@ -170,7 +170,7 @@ class Boss(Character):
         super().__init__(name, level, hp, atk, gold, xp)
     
     # helper function to increase the stats of bosses when they spawn
-    def level_up_enemy(self, player):
+    def level_up_enemy_boss(self):
         i = 1
         while i <= self.level:
             self.hp += 5
@@ -182,8 +182,12 @@ class Boss(Character):
 
     # spawns 1 of the 4 bosses at random
     def spawn_boss():
-        boss_choice = random.randrange(0, len(boss_list)-1)
-        enemy = boss_list.pop(boss_choice)
+        if len(boss_list) > 1:
+            boss_choice = random.randrange(0, len(boss_list)-1)
+            enemy = boss_list.pop(boss_choice)
+        else:
+            enemy = boss_list.pop(0)
+        enemy.level_up_enemy_boss()
         return enemy
 
 
